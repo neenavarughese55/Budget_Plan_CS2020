@@ -35,6 +35,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     private JTextField rentField;
     private JTextField transportField;
     private JTextField totalIncomeField; // Total Income field
+    private JTextField totalSpendField;
 
     // constructor - create UI (dont need to change this)
     public BudgetBase(JFrame frame) {
@@ -124,6 +125,17 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         transportField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
         addComponent(transportField, 3, 5);
 
+        // Row 3 - Total Income label followed by total income field
+        JLabel totalSpendingLabel = new JLabel("Total Spend");
+        addComponent(totalSpendingLabel, 4, 4);
+
+        // set up text box for displaying total income. Users cam view, but cannot
+        // directly edit it
+        totalSpendField = new JTextField("0", 10); // 0 initially, with 10 columns
+        totalSpendField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
+        totalSpendField.setEditable(false); // user cannot directly edit this field (ie, it is read-only)
+        addComponent(totalSpendField, 4, 5);
+
         // Row 4 - Calculate Button
         calculateButton = new JButton("Calculate");
         addComponent(calculateButton, 5, 0);
@@ -151,6 +163,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         calculateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 calculateTotalIncome();
+                calculateTotalSpend();
             }
         });
 
@@ -173,18 +186,37 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         // get values from income text fields. valie is NaN if an error occurs
         double wages = getTextFieldValue(wagesField);
         double loans = getTextFieldValue(loansField);
+        double savings = getTextFieldValue(savingsField);
 
         // clear total field and return if any value is NaN (error)
-        if (Double.isNaN(wages) || Double.isNaN(loans)) {
+        if (Double.isNaN(wages) || Double.isNaN(loans) || Double.isNaN(savings)) {
             totalIncomeField.setText(""); // clear total income field
             wages = 0.0;
             return wages; // exit method and do nothing
         }
 
         // otherwise calculate total income and update text field
-        double totalIncome = wages + loans;
+        double totalIncome = wages + loans + savings;
         totalIncomeField.setText(String.format("%.2f", totalIncome)); // format with 2 digits after the .
         return totalIncome;
+    }
+
+    public double calculateTotalSpend() {
+        double food = getTextFieldValue(foodField);
+        double rent = getTextFieldValue(rentField);
+        double transport = getTextFieldValue(transportField);
+
+        // clear total field and return if any value is NaN (error)
+        if (Double.isNaN(food) || Double.isNaN(rent) || Double.isNaN(transport)) {
+            totalSpendField.setText(""); // clear total income field
+            food = 0.0;
+            return food; // exit method and do nothing
+        }
+
+        double totalSpend = food + rent + transport;
+        totalSpendField.setText(String.format("%.2f", totalSpend)); // format with 2 digits after the .
+        return totalSpend;
+
     }
 
     // return the value if a text field as a double
