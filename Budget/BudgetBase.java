@@ -32,6 +32,8 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     private JTextField loansField; // Loans text field
     private JTextField savingsField;
     private JTextField foodField;
+    private JTextField rentField;
+    private JTextField transportField;
     private JTextField totalIncomeField; // Total Income field
 
     // constructor - create UI (dont need to change this)
@@ -89,18 +91,38 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         addComponent(totalIncomeField, 4, 1);
 
         // Top row (0) - "INCOME" label
-        JLabel Spending = new JLabel("SPENDING");
-        addComponent(incomeLabel, 0, 0);
+        JLabel spendingLabel = new JLabel("SPENDING");
+        addComponent(spendingLabel, 0, 4);
 
         // Row 1 - Wages label followed by wages textbox
         JLabel foodLabel = new JLabel("Food");
-        addComponent(foodLabel, 1, 0);
+        addComponent(foodLabel, 1, 4);
 
         // set up text field for entering wages
         // Could create method to do below (since this is done several times)
         foodField = new JTextField("", 10); // blank initially, with 10 columns
         foodField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
-        addComponent(wagesField, 1, 1);
+        addComponent(foodField, 1, 5);
+
+        // Row 1 - Wages label followed by wages textbox
+        JLabel rentLabel = new JLabel("Rent");
+        addComponent(rentLabel, 2, 4);
+
+        // set up text field for entering wages
+        // Could create method to do below (since this is done several times)
+        rentField = new JTextField("", 10); // blank initially, with 10 columns
+        rentField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
+        addComponent(rentField, 2, 5);
+
+        // Row 1 - Wages label followed by wages textbox
+        JLabel transportLabel = new JLabel("Transport");
+        addComponent(transportLabel, 3, 4);
+
+        // set up text field for entering wages
+        // Could create method to do below (since this is done several times)
+        transportField = new JTextField("", 10); // blank initially, with 10 columns
+        transportField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
+        addComponent(transportField, 3, 5);
 
         // Row 4 - Calculate Button
         calculateButton = new JButton("Calculate");
