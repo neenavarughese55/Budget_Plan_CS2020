@@ -36,6 +36,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     private JTextField transportField;
     private JTextField totalIncomeField; // Total Income field
     private JTextField totalSpendField;
+    private JTextField leftoverField;
 
     // constructor - create UI (dont need to change this)
     public BudgetBase(JFrame frame) {
@@ -136,13 +137,24 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         totalSpendField.setEditable(false); // user cannot directly edit this field (ie, it is read-only)
         addComponent(totalSpendField, 4, 5);
 
+        // Row 3 - Total Income label followed by total income field
+        JLabel leftoverLabel = new JLabel("Leftover");
+        addComponent(leftoverLabel, 5, 4);
+
+        // set up text box for displaying total income. Users cam view, but cannot
+        // directly edit it
+        leftoverField = new JTextField("0", 10); // 0 initially, with 10 columns
+        leftoverField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
+        leftoverField.setEditable(false); // user cannot directly edit this field (ie, it is read-only)
+        addComponent(leftoverField, 5, 5);
+
         // Row 4 - Calculate Button
         calculateButton = new JButton("Calculate");
-        addComponent(calculateButton, 5, 0);
+        addComponent(calculateButton, 6, 0);
 
         // Row 5 - Exit Button
         exitButton = new JButton("Exit");
-        addComponent(exitButton, 6, 0);
+        addComponent(exitButton, 7, 0);
 
         // set up listeners (in a spearate method)
         initListeners();
@@ -164,6 +176,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
             public void actionPerformed(ActionEvent e) {
                 calculateTotalIncome();
                 calculateTotalSpend();
+                IncomeMinusSpending();
             }
         });
 
@@ -217,6 +230,26 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         totalSpendField.setText(String.format("%.2f", totalSpend)); // format with 2 digits after the .
         return totalSpend;
 
+    }
+
+    public double IncomeMinusSpending() {
+        double totalIncome = getTextFieldValue(totalIncomeField);
+        double totalSpend = getTextFieldValue(totalSpendField);
+
+        if (Double.isNaN(totalIncome) || Double.isNaN(totalSpend)) {
+            totalSpendField.setText(""); // clear total income field
+            totalIncome = 0.0;
+            return totalIncome; // exit method and do nothing
+        }
+
+        double leftover = totalIncome - totalSpend;
+
+        if (leftover < 0) {
+            leftoverField.setText(String.format("<html><span style = 'color:red;'>%.2f</span></html>", leftover));
+        } else {
+            leftoverField.setText(String.format("<html><span style = 'color:black;'>%.2f</span></html>", leftover));
+        }
+        return leftover;
     }
 
     // return the value if a text field as a double
