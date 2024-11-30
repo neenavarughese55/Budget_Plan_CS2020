@@ -36,7 +36,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     private JTextField transportField;
     private JTextField totalIncomeField; // Total Income field
     private JTextField totalSpendField;
-    private JTextField leftoverField;
+    private JLabel leftoverField;
 
     // constructor - create UI (dont need to change this)
     public BudgetBase(JFrame frame) {
@@ -143,9 +143,9 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
 
         // set up text box for displaying total income. Users cam view, but cannot
         // directly edit it
-        leftoverField = new JTextField("0", 10); // 0 initially, with 10 columns
-        leftoverField.setHorizontalAlignment(JTextField.LEFT); // number is at right end of field
-        leftoverField.setEditable(false); // user cannot directly edit this field (ie, it is read-only)
+        leftoverField = new JLabel("0"); // 0 initially, with 10 columns
+        leftoverField.setHorizontalAlignment(SwingConstants.LEFT); // number is at right end of field // user cannot
+                                                                   // directly edit this field (ie, it is read-only)
         addComponent(leftoverField, 5, 5);
 
         // Row 4 - Calculate Button
@@ -245,9 +245,9 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         double leftover = totalIncome - totalSpend;
 
         if (leftover < 0) {
-            leftoverField.setText(String.format("<html><span style = 'color:red;'>%.2f</span></html>", leftover));
+            leftoverField.setText(String.format("<html><span style='color:red;'>%.2f</span></html>", leftover));
         } else {
-            leftoverField.setText(String.format("<html><span style = 'color:black;'>%.2f</span></html>", leftover));
+            leftoverField.setText(String.format("<html><span style='color:black;'>%.2f</span></html>", leftover));
         }
         return leftover;
     }
