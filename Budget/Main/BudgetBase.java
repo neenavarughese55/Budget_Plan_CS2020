@@ -11,7 +11,7 @@
 // Layout - Uses GridBag layout in a straightforward way, every component has a (column, row) position in the UI grid
 // Not the prettiest layout, but relatively straightforward
 // Students who use IntelliJ or Eclipse may want to use the UI designers in these IDEs , instead of GridBagLayout
-package Budget;
+package Budget.Main;
 
 // Swing imports
 import javax.swing.*;
@@ -50,7 +50,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     // Listener stuff in a separate method
     // will be generated automatically by IntelliJ, Eclipse, etc
     private void initComponents() {
-
         // Top row (0) - "INCOME" label
         JLabel incomeLabel = new JLabel("INCOME");
         addComponent(incomeLabel, 0, 0);

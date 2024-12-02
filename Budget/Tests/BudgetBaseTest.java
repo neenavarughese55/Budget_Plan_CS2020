@@ -1,7 +1,9 @@
-package Budget;
+package Budget.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import Budget.Main.BudgetBase;
 
 // Swing imports
 import javax.swing.*;
@@ -11,18 +13,16 @@ import java.awt.*;
 /**
  * Unit test for simple App.
  */
-public class BudgetBaseTest 
-{
+public class BudgetBaseTest {
     /**
      * Rigorous Test :-)
      */
     @Test
-    public void shouldTotal()
-    {
+    public void shouldTotal() {
         JFrame frame = new JFrame();
         BudgetBase bb = new BudgetBase(frame);
         double value = 0.0;
 
-        assertEquals(value, bb.calculateTotalIncome() );
+        assertEquals(value, bb.calculateTotalIncome());
     }
 }
