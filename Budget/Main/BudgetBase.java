@@ -28,9 +28,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     // widgets which may have listeners and/or values
     private JButton calculateButton; // Calculate button
     private JButton exitButton; // Exit button
-    private JTextField wagesField; // Wages text field
-    private JTextField loansField; // Loans text field
-    private JTextField savingsField;
     private JTextField foodField;
     private JTextField rentField;
     private JTextField transportField;
@@ -51,34 +48,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     // will be generated automatically by IntelliJ, Eclipse, etc
     private void initComponents() {
         // Top row (0) - "INCOME" label
-        JLabel incomeLabel = new JLabel("INCOME");
-        addComponent(incomeLabel, 0, 0);
-
-        // Row 1 - Wages label followed by wages textbox
-        JLabel wagesLabel = new JLabel("Wages");
-        addComponent(wagesLabel, 1, 0);
-
-        // set up text field for entering wages
-        // Could create method to do below (since this is done several times)
-        wagesField = new JTextField("", 10); // blank initially, with 10 columns
-        wagesField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
-        addComponent(wagesField, 1, 1);
-
-        // Row 2 - Loans label followed by loans textbox
-        JLabel loansLabel = new JLabel("Loans");
-        addComponent(loansLabel, 2, 0);
-
-        // set up text box for entering loans
-        loansField = new JTextField("", 10); // blank initially, with 10 columns
-        loansField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
-        addComponent(loansField, 2, 1);
-
-        JLabel savingsLabel = new JLabel("savings");
-        addComponent(savingsLabel, 3, 0);
-
-        savingsField = new JTextField("", 10); // blank initially, with 10 columns
-        savingsField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
-        addComponent(savingsField, 3, 1);
 
         // Row 3 - Total Income label followed by total income field
         JLabel totalIncomeLabel = new JLabel("Total Income");
@@ -173,7 +142,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         // calculateButton - call calculateTotalIncome() when pressed
         calculateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                calculateTotalIncome();
+                IncomeBase.calculateTotalIncome();
                 calculateTotalSpend();
                 IncomeMinusSpending();
             }
@@ -193,25 +162,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     // update totalIncomeField (eg, when Calculate is pressed)
     // use double to hold numbers, so user can type fractional amounts such as
     // 134.50
-    public double calculateTotalIncome() {
-
-        // get values from income text fields. valie is NaN if an error occurs
-        double wages = getTextFieldValue(wagesField);
-        double loans = getTextFieldValue(loansField);
-        double savings = getTextFieldValue(savingsField);
-
-        // clear total field and return if any value is NaN (error)
-        if (Double.isNaN(wages) || Double.isNaN(loans) || Double.isNaN(savings)) {
-            totalIncomeField.setText(""); // clear total income field
-            wages = 0.0;
-            return wages; // exit method and do nothing
-        }
-
-        // otherwise calculate total income and update text field
-        double totalIncome = wages + loans + savings;
-        totalIncomeField.setText(String.format("%.2f", totalIncome)); // format with 2 digits after the .
-        return totalIncome;
-    }
 
     public double calculateTotalSpend() {
         double food = getTextFieldValue(foodField);
