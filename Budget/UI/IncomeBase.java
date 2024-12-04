@@ -2,6 +2,10 @@ package Budget.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.ActionEvent;
 
 public class IncomeBase extends JPanel {
 
@@ -23,6 +27,7 @@ public class IncomeBase extends JPanel {
         topLevelFrame = frame; // keep track of top-level frame
         setLayout(new GridBagLayout()); // use GridBag layout
         initIncomeComponents(); // initalise components
+        addListeners();
     }
 
     private void initIncomeComponents() {
@@ -76,6 +81,35 @@ public class IncomeBase extends JPanel {
         totalIncomeField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         totalIncomeField.setEditable(false); // user cannot directly edit this field (ie, it is read-only)
         addComponent(totalIncomeField, 5, 3);
+    }
+
+    private void addListeners() {
+        FocusListener focusListener = new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                calculateTotalIncome();
+            }
+        };
+
+        wagesField.addFocusListener(focusListener);
+        loansField.addFocusListener(focusListener);
+        savingsField.addFocusListener(focusListener);
+
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateTotalIncome();
+            }
+        };
+
+        wagesDurationBox.addActionListener(actionListener);
+        loansDurationBox.addActionListener(actionListener);
+        savingsDurationBox.addActionListener(actionListener);
     }
 
     public void addLabelandField(String labelText, int row, JTextField field) {
