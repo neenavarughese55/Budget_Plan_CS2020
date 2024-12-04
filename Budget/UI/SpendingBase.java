@@ -8,11 +8,16 @@ public class SpendingBase extends JPanel {
     JFrame topLevelFrame; // top-level JFrame
     GridBagConstraints layoutConstraints = new GridBagConstraints(); // used to control layout
 
-    public JTextField foodField;
-    public JTextField rentField;
-    public JTextField transportField;
+    public JTextField foodField; // Food text field
+    public JComboBox<String> foodDurationBox; // Food duration selection
+
+    public JTextField rentField; // Rent text field
+    public JComboBox<String> rentDurationBox; // Rent duration selection
+
+    public JTextField transportField; // Transport text field
+    public JComboBox<String> transportDurationBox; // Transport duration selection
+
     public JTextField totalSpendField;
-    public JComboBox<String> durationBox;
 
     public SpendingBase(JFrame frame) {
         topLevelFrame = frame; // keep track of top-level frame
@@ -21,6 +26,7 @@ public class SpendingBase extends JPanel {
     }
 
     private void initComponents() {
+        String[] durations = { "Per Week", "Per Month", "Per Year" };
         // Top row (0) - "INCOME" label
         JLabel spendingLabel = new JLabel("SPENDING");
         layoutConstraints.gridwidth = 2;
@@ -36,6 +42,9 @@ public class SpendingBase extends JPanel {
         foodField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(foodField, 2, 3);
 
+        foodDurationBox = new JComboBox<>(durations);
+        addComponent(foodDurationBox, 2, 6);
+
         // Row 1 - Wages label followed by wages textbox
         JLabel rentLabel = new JLabel("Rent");
         addComponent(rentLabel, 3, 1);
@@ -45,6 +54,9 @@ public class SpendingBase extends JPanel {
         rentField = new JTextField("", 10); // blank initially, with 10 columns
         rentField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(rentField, 3, 3);
+
+        rentDurationBox = new JComboBox<>(durations);
+        addComponent(rentDurationBox, 3, 6);
 
         // Row 1 - Wages label followed by wages textbox
         JLabel transportLabel = new JLabel("Transport");
@@ -56,13 +68,8 @@ public class SpendingBase extends JPanel {
         transportField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(transportField, 4, 3);
 
-        JLabel durationLabel = new JLabel("duration");
-        addComponent(durationLabel, 5, 2);
-
-        // blank initially, with 10 columns
-        durationBox = new JComboBox<>(new String[] { "Per Week", "Per Month", "Per Year" }); // number is at right end
-                                                                                             // // // // // of field
-        addComponent(durationBox, 5, 3);
+        transportDurationBox = new JComboBox<>(durations);
+        addComponent(transportDurationBox, 4, 6);
 
         // Row 3 - Total Income label followed by total income field
         JLabel totalSpendingLabel = new JLabel("Total Spend");
@@ -85,9 +92,10 @@ public class SpendingBase extends JPanel {
     }
 
     public double calculateTotalSpend() {
-        double food = getTextFieldValue(foodField);
-        double rent = getTextFieldValue(rentField);
-        double transport = getTextFieldValue(transportField);
+        double food = adjustDuration(getTextFieldValue(foodField), (String) foodDurationBox.getSelectedItem());
+        double rent = adjustDuration(getTextFieldValue(rentField), (String) rentDurationBox.getSelectedItem());
+        double transport = adjustDuration(getTextFieldValue(transportField),
+                (String) transportDurationBox.getSelectedItem());
 
         // clear total field and return if any value is NaN (error)
         if (Double.isNaN(food) || Double.isNaN(rent) || Double.isNaN(transport)) {
@@ -97,8 +105,19 @@ public class SpendingBase extends JPanel {
 
         double totalSpend = food + rent + transport;
         totalSpendField.setText(String.format("%.2f", totalSpend)); // format with 2 digits after the .
-        return adjustDuration(totalSpend, (String) durationBox.getSelectedItem());
+        return (totalSpend);
 
+    }
+
+    private double adjustDuration(double value, String duration) {
+        switch (duration) {
+            case "Per Year":
+                return value / 52;
+            case "Per Month":
+                return value / 4.3333333;
+            default:
+                return value;
+        }
     }
 
     private double getTextFieldValue(JTextField field) {
@@ -120,22 +139,13 @@ public class SpendingBase extends JPanel {
         }
     }
 
-    private double adjustDuration(double value, String duration) {
-        switch (duration) {
-            case "Per Year":
-                return value * 52;
-            case "Per Month":
-                return value * 4.3333333;
-            default:
-                return value;
-        }
-    }
-
-    private void addComponent(Component component, int gridrow, int gridcol) {
-        layoutConstraints.fill = GridBagConstraints.HORIZONTAL; // always use horixontsl filll
-        layoutConstraints.gridx = gridcol;
-        layoutConstraints.gridy = gridrow;
-        add(component, layoutConstraints);
+    private void addComponent(Component component, int row, int col) {
+        GridBagConstraints gbc = new GridBagConstraints(); // always use horixontsl filll
+        gbc.gridx = col;
+        gbc.gridy = row;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(component, gbc);
     }
 
 }

@@ -136,10 +136,11 @@ public class IncomeBase extends JPanel {
     }
 
     private void addComponent(Component component, int row, int col) {
-        GridBagConstraints gbc = new GridBagConstraints(); // always use horixontsl filll
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = col;
         gbc.gridy = row;
         gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         add(component, gbc);
     }
 
