@@ -96,7 +96,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         calculateButton.addActionListener(e -> {
             double totalIncome = incomeBase.calculateTotalIncome();
             double totalSpending = spendingBase.calculateTotalSpend();
-            calculationBase.updateCalculation(totalIncome, totalSpending);
+            calculationBase.updateLeftover(totalIncome, totalSpending);
         });
     }
 

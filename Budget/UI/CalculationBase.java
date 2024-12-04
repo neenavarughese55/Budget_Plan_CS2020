@@ -18,7 +18,7 @@ public class CalculationBase extends JPanel {
         add(leftoverLabel, gbc);
     }
 
-    public double updateCalculation(double totalIncome, double totalSpend) {
+    public double updateLeftover(double totalIncome, double totalSpend) {
         double leftover = totalIncome - totalSpend;
 
         if (leftover < 0) {

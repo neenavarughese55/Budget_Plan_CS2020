@@ -73,7 +73,7 @@ public class IncomeBase extends JPanel {
         addComponent(savingsDurationBox, 3, 6);
 
         JLabel totalIncomeLabel = new JLabel("Total Income");
-        addComponent(totalIncomeLabel, 5, 1);
+        addComponent(totalIncomeLabel, 5, 2);
 
         // set up text box for displaying total income. Users cam view, but cannot
         // directly edit it
