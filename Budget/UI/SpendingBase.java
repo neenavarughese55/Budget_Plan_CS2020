@@ -2,6 +2,10 @@ package Budget.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.ActionEvent;
 
 public class SpendingBase extends JPanel {
 
@@ -22,10 +26,11 @@ public class SpendingBase extends JPanel {
     public SpendingBase(JFrame frame) {
         topLevelFrame = frame; // keep track of top-level frame
         setLayout(new GridBagLayout()); // use GridBag layout
-        initComponents(); // initalise components
+        initSpendingComponents(); // initalise components
+        addListeners();
     }
 
-    private void initComponents() {
+    private void initSpendingComponents() {
         String[] durations = { "Per Week", "Per Month", "Per Year" };
         // Top row (0) - "INCOME" label
         JLabel spendingLabel = new JLabel("SPENDING");
@@ -83,6 +88,35 @@ public class SpendingBase extends JPanel {
         addComponent(totalSpendField, 6, 3);
     }
 
+    private void addListeners() {
+        FocusListener focusListener = new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                calculateTotalSpend();
+            }
+        };
+
+        foodField.addFocusListener(focusListener);
+        rentField.addFocusListener(focusListener);
+        transportField.addFocusListener(focusListener);
+
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateTotalSpend();
+            }
+        };
+
+        foodDurationBox.addActionListener(actionListener);
+        rentDurationBox.addActionListener(actionListener);
+        transportDurationBox.addActionListener(actionListener);
+    }
+
     public void addLabelandField(String labelText, int row, JTextField field) {
         JLabel label = new JLabel(labelText);
         addComponent(label, row, 0);
@@ -126,7 +160,7 @@ public class SpendingBase extends JPanel {
         String fieldString = field.getText(); // get text from text field
 
         if (fieldString.isBlank()) { // if text field is blank, return 0
-            return 0;
+            return 0.0;
         }
 
         else { // if text field is not blank, parse it into a double
