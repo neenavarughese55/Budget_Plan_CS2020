@@ -5,7 +5,7 @@ import java.util.Stack;
 // Class to manage undo functionality for the application
 public class UndoBase {
 
-    private final Stack<BudgetState> stateStack = new Stack<>(); // Stack to store states
+    private Stack<BudgetState> stateStack = new Stack<>(); // Stack to store states
 
     // To save the current state in the stack
     public void saveState(BudgetState state) {

@@ -87,12 +87,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         initListeners();
     }
 
-    /**
-     * Save the current state of the application to enable undo functionality.
-     * 
-     * @param undoBase The UndoBase instance to save the state to.
-     */
-
+    // Saves the current state of the application to enable undo functionality
     public void saveCurrentState(UndoBase undoBase) {
         // Retrieve current values from the income and spending fields
         double wages = incomeBase.getTextFieldValue(incomeBase.wagesField);
@@ -108,14 +103,11 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         this.undoBase.saveState(state);
     }
 
-    /**
-     * Undo the last change made by the user, reverting to the previous state.
-     * 
-     * @param undoBase The UndoBase instance managing undo states.
-     */
+    // Undo the last change made by the user, reverting to the previous state
     public void undoLastChange(UndoBase undoBase) {
+
         // Retrieve the last saved state
-        BudgetState state = this.undoBase.undo();
+        BudgetState state = undoBase.undo();
         if (state != null) {
             // Restore values to the fields from the saved state
             incomeBase.wagesField.setText(String.valueOf(state.wages));
@@ -125,6 +117,10 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
             spendingBase.foodField.setText(String.valueOf(state.food));
             spendingBase.rentField.setText(String.valueOf(state.rent));
             spendingBase.transportField.setText(String.valueOf(state.transport));
+
+            double totalIncome = incomeBase.calculateTotalIncome();
+            double totalSpending = spendingBase.calculateTotalSpend();
+            calculationBase.updateLeftover(totalIncome, totalSpending);
         }
     }
 
@@ -145,19 +141,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         // Listen for the Undo button
         undoButton.addActionListener(e -> undoLastChange(undoBase));
     }
-
-    // add a component at specified row and column in UI. (0,0) is top-left corner
-
-    // update totalIncomeField (eg, when Calculate is pressed)
-    // use double to hold numbers, so user can type fractional amounts such as
-    // 134.50
-
-    // return the value if a text field as a double
-    // --return 0 if field is blank
-    // --return NaN if field is not a number
-    // below is standard code to set up Swing, which students shouldnt need to edit
-    // much
-    // standard mathod to show UI
 
     // Sets up and displays the GUI
     public static void createAndShowGUI() {
