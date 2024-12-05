@@ -25,7 +25,7 @@ import Budget.UI.BudgetState;
 
 // class definition
 public class BudgetBase extends JPanel { // based on Swing JPanel
-    private UndoBase undoBase = new UndoBase(); // Muliple undo
+    public UndoBase undoBase = new UndoBase(); // Muliple undo
 
     // widgets which may have listeners and/or values
     public JButton calculateButton; // Calculate button
@@ -96,7 +96,7 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         initListeners();
     }
 
-    public void saveCurrentState(UndoBase undoBase) {
+    public void saveCurrentState(UndoBase undoBase2) {
         double wages = incomeBase.getTextFieldValue(incomeBase.wagesField);
         double loans = incomeBase.getTextFieldValue(incomeBase.loansField);
         double savings = incomeBase.getTextFieldValue(incomeBase.savingsField);
@@ -106,11 +106,11 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         double transport = spendingBase.getTextFieldValue(spendingBase.transportField);
 
         BudgetState state = new BudgetState(wages, loans, savings, food, rent, transport);
-        undoBase.saveState(state);
+        this.undoBase.saveState(state);
     }
 
     public void undoLastChange(UndoBase undoBase) {
-        BudgetState state = undoBase.undo();
+        BudgetState state = this.undoBase.undo();
         if (state != null) {
             incomeBase.wagesField.setText(String.valueOf(state.wages));
             incomeBase.loansField.setText(String.valueOf(state.loans));
