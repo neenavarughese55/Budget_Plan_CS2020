@@ -20,13 +20,17 @@ import java.awt.*;
 import Budget.UI.IncomeBase;
 import Budget.UI.SpendingBase;
 import Budget.UI.CalculationBase;
+import Budget.UI.UndoBase;
+import Budget.UI.BudgetState;
 
 // class definition
 public class BudgetBase extends JPanel { // based on Swing JPanel
+    private UndoBase undoBase = new UndoBase();
 
     // widgets which may have listeners and/or values
     public JButton calculateButton; // Calculate button
     public JButton exitButton; // Exit button
+    public JButton undoButton; // Undo button
 
     public IncomeBase incomeBase;
     public SpendingBase spendingBase;
@@ -81,8 +85,42 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(exitButton, gbc);
 
+        gbc.gridx = 6;
+        gbc.gridwidth = 1;
+        exitButton = new JButton("Undo");
+        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(exitButton, gbc);
+
         // set up listeners (in a spearate method)
         initListeners();
+    }
+
+    public void saveCurrentState(UndoBase undoBase) {
+        double wages = incomeBase.getTextFieldValue(incomeBase.wagesField);
+        double loans = incomeBase.getTextFieldValue(incomeBase.loansField);
+        double savings = incomeBase.getTextFieldValue(incomeBase.savingsField);
+
+        double food = spendingBase.getTextFieldValue(spendingBase.foodField);
+        double rent = spendingBase.getTextFieldValue(spendingBase.rentField);
+        double transport = spendingBase.getTextFieldValue(spendingBase.transportField);
+
+        BudgetState state = new BudgetState(wages, loans, savings, food, rent, transport);
+        undoBase.saveState(state);
+    }
+
+    public void undoLastChange(UndoBase undoBase) {
+        BudgetState state = undoBase.undo();
+        if (state != null) {
+            incomeBase.wagesField.setText(String.valueOf(state.wages));
+            incomeBase.loansField.setText(String.valueOf(state.loans));
+            incomeBase.savingsField.setText(String.valueOf(state.savings));
+
+            spendingBase.foodField.setText(String.valueOf(state.food));
+            spendingBase.rentField.setText(String.valueOf(state.rent));
+            spendingBase.transportField.setText(String.valueOf(state.transport));
+
+        }
     }
 
     // set up listeners
@@ -98,6 +136,8 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
             double totalSpending = spendingBase.calculateTotalSpend();
             calculationBase.updateLeftover(totalIncome, totalSpending);
         });
+
+        undoButton.addActionListener(e -> undoLastChange(undoBase));
     }
 
     // add a component at specified row and column in UI. (0,0) is top-left corner

@@ -154,7 +154,7 @@ public class SpendingBase extends JPanel {
         }
     }
 
-    private double getTextFieldValue(JTextField field) {
+    public double getTextFieldValue(JTextField field) {
 
         // get value as String from field
         String fieldString = field.getText(); // get text from text field
