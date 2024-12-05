@@ -7,8 +7,10 @@ import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
 
+// Class to handle income related inputs and calculations
 public class IncomeBase extends JPanel {
 
+    // Components for income inputs
     public JTextField wagesField; // Wages text field
     public JComboBox<String> wagesDurationBox; // Wages Duration Selection
 
@@ -18,39 +20,42 @@ public class IncomeBase extends JPanel {
     public JTextField savingsField;
     public JComboBox<String> savingsDurationBox; // Savings Duration Selection
 
-    public JTextField totalIncomeField;
+    public JTextField totalIncomeField; // Field to display total income
 
-    JFrame topLevelFrame; // top-level JFrame
-    GridBagConstraints layoutConstraints = new GridBagConstraints();
+    JFrame topLevelFrame; // Reference to the parent JFrame
+    GridBagConstraints layoutConstraints = new GridBagConstraints(); // For layout positioning
 
+    // Constructor to intialise the IncomeBase panel
     public IncomeBase(JFrame frame) {
         topLevelFrame = frame; // keep track of top-level frame
         setLayout(new GridBagLayout()); // use GridBag layout
         initIncomeComponents(); // initalise components
-        addListeners();
+        addListeners(); // Add event listeners to the components
     }
 
+    // Method to initialise income related components
     private void initIncomeComponents() {
+        // Duration options for the dropdowns
         String[] durations = { "Per Week", "Per Month", "Per Year" };
 
+        // Add "INCOME" label
         JLabel incomeLabel = new JLabel("INCOME");
         layoutConstraints.gridwidth = 2;
         addComponent(incomeLabel, 0, 2);
 
-        // Row 1 - Wages label followed by wages textbox
+        // Wages label followed by wages textbox
         JLabel wagesLabel = new JLabel("Wages");
         addComponent(wagesLabel, 1, 2);
 
         // set up text field for entering wages
-        // Could create method to do below (since this is done several times)
         wagesField = new JTextField("", 10); // blank initially, with 10 columns
         wagesField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(wagesField, 1, 3);
 
-        wagesDurationBox = new JComboBox<>(durations);
+        wagesDurationBox = new JComboBox<>(durations); // Dropdown for duration selection
         addComponent(wagesDurationBox, 1, 6);
 
-        // Row 2 - Loans label followed by loans textbox
+        // Loans label followed by loans textbox
         JLabel loansLabel = new JLabel("Loans");
         addComponent(loansLabel, 2, 2);
 
@@ -59,19 +64,22 @@ public class IncomeBase extends JPanel {
         loansField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(loansField, 2, 3);
 
-        loansDurationBox = new JComboBox<>(durations);
+        loansDurationBox = new JComboBox<>(durations); // Dropdown for duration selection
         addComponent(loansDurationBox, 2, 6);
 
+        // Savings label followed by loans textbox
         JLabel savingsLabel = new JLabel("savings");
         addComponent(savingsLabel, 3, 2);
 
+        // set up text box for entering savings
         savingsField = new JTextField("", 10); // blank initially, with 10 columns
         savingsField.setHorizontalAlignment(JTextField.RIGHT); // number is at right end of field
         addComponent(savingsField, 3, 3);
 
-        savingsDurationBox = new JComboBox<>(durations);
+        savingsDurationBox = new JComboBox<>(durations); // Dropdown for duration selection
         addComponent(savingsDurationBox, 3, 6);
 
+        // Total Income label
         JLabel totalIncomeLabel = new JLabel("Total Income");
         addComponent(totalIncomeLabel, 5, 2);
 
@@ -83,7 +91,9 @@ public class IncomeBase extends JPanel {
         addComponent(totalIncomeField, 5, 3);
     }
 
+    // Method to add event listeners for components
     private void addListeners() {
+        // Listener to calculate total income when focus is lost
         FocusListener focusListener = new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -92,37 +102,32 @@ public class IncomeBase extends JPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-                calculateTotalIncome();
+                calculateTotalIncome(); // Recalulate total income
             }
         };
 
+        // Add focus listeners to text fields
         wagesField.addFocusListener(focusListener);
         loansField.addFocusListener(focusListener);
         savingsField.addFocusListener(focusListener);
 
+        // Listener for dropdown selection changes
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                calculateTotalIncome();
+                calculateTotalIncome(); // Recalculate total income
             }
         };
 
+        // Add action listeners to dropdowns
         wagesDurationBox.addActionListener(actionListener);
         loansDurationBox.addActionListener(actionListener);
         savingsDurationBox.addActionListener(actionListener);
     }
 
-    public void addLabelandField(String labelText, int row, JTextField field) {
-        JLabel label = new JLabel(labelText);
-        addComponent(label, row, 0);
-
-        field.setHorizontalAlignment(JTextField.RIGHT);
-        addComponent(field, row, 2);
-    }
-
+    // Calculate the total income based on user inputs
     public double calculateTotalIncome() {
-
-        // get values from income text fields. valie is NaN if an error occurs
+        // get values from income text fields. value is NaN if an error occurs
         double wages = adjustDuration(getTextFieldValue(wagesField), (String) wagesDurationBox.getSelectedItem());
         double loans = adjustDuration(getTextFieldValue(loansField), (String) loansDurationBox.getSelectedItem());
         double savings = adjustDuration(getTextFieldValue(savingsField), (String) savingsDurationBox.getSelectedItem());
@@ -130,7 +135,7 @@ public class IncomeBase extends JPanel {
         // clear total field and return if any value is NaN (error)
         if (Double.isNaN(wages) || Double.isNaN(loans) || Double.isNaN(savings)) {
             totalIncomeField.setText(""); // clear total income field
-            return 0.0; // exit method and do nothing
+            return 0.0; // exit method
         }
 
         // otherwise calculate total income and update text field
@@ -142,11 +147,11 @@ public class IncomeBase extends JPanel {
     private double adjustDuration(double value, String duration) {
         switch (duration) {
             case "Per Year":
-                return value / 52;
+                return value / 52; // Convert yearly value to weekly
             case "Per Month":
-                return value / 4.3333333;
+                return value / 4.3333333; // Convert monthly value to weekly
             default: // Per Week
-                return value;
+                return value; // No adjustment needed
         }
     }
 
@@ -169,12 +174,13 @@ public class IncomeBase extends JPanel {
         }
     }
 
+    // Utility method to add a component to the panel with layout constraints
     private void addComponent(Component component, int row, int col) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = col;
         gbc.gridy = row;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5); // Add padding
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontally
         add(component, gbc);
     }
 

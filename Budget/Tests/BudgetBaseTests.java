@@ -12,13 +12,14 @@ import javax.swing.*;
  */
 public class BudgetBaseTests {
 
-    private BudgetBase budgetBase;
-    private JFrame frame;
+    private BudgetBase budgetBase; // Instance of BudgetBase for testing
+    private JFrame frame; // Parent JFrame
 
+    // Set up the testing environment before each test
     @BeforeEach
     public void setUp() {
-        frame = new JFrame();
-        budgetBase = new BudgetBase(frame);
+        frame = new JFrame(); // Initialise a new JFrame
+        budgetBase = new BudgetBase(frame); // Initialise a new BudgetBase instance
     }
 
     /**
