@@ -2,9 +2,6 @@ import Budget.UI.BudgetState;
 import Budget.UI.UndoBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,14 +15,14 @@ class UndoBaseTest {
     }
 
     @Test
-    void testSaveState() {
+    void saveState_validState_stateIsSaved() {
         BudgetState state = new BudgetState(500, 200, 100, 50, 300, 20);
         undoBase.saveState(state);
         assertTrue(undoBase.canUndo(), "Undo stack should not be empty after saving a state");
     }
 
     @Test
-    void testUndoSingleAction() {
+    void undo_singleSavedState_stateIsUndone() {
         BudgetState state1 = new BudgetState(500, 200, 100, 50, 300, 20);
         undoBase.saveState(state1);
 
@@ -34,7 +31,7 @@ class UndoBaseTest {
     }
 
     @Test
-    void testUndoMultipleActions() {
+    void undo_multipleSavedStates_statesAreUndoneInOrder() {
         BudgetState state1 = new BudgetState(500, 200, 100, 50, 300, 20);
         BudgetState state2 = new BudgetState(600, 250, 150, 70, 320, 30);
         BudgetState state3 = new BudgetState(700, 300, 200, 90, 350, 40);
@@ -49,13 +46,13 @@ class UndoBaseTest {
     }
 
     @Test
-    void testUndoOnEmptyStack() {
+    void undo_emptyStack_returnsNull() {
         BudgetState undoneState = undoBase.undo();
         assertNull(undoneState, "Undo on an empty stack should return null");
     }
 
     @Test
-    void testStateIntegrity() {
+    void saveState_modifyOriginalState_savedStateRemainsUnchanged() {
         BudgetState state = new BudgetState(500, 200, 100, 50, 300, 20);
         undoBase.saveState(state);
 
