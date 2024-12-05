@@ -1,82 +1,110 @@
-Budget Calculator Application
-Overview
-The Budget Calculator Application is a Java-based desktop program that helps users manage their income and spending, providing insights into their financial status. The application is built using Swing, a GUI framework in Java, to create a simple and interactive interface. Key features include:
+## Budget Calculator Application
+### Implementation
+### BudgetBase.java File
 
-Input and calculation of income from multiple sources (e.g., wages, loans, savings).
-Input and calculation of spending on different categories (e.g., food, rent, transport).
-Calculation and display of the leftover amount (income - spending).
-Undo functionality to revert to previous states.
-Features
-Income Management:
+#### Implementation
+The BudgetBase class serves as the central panel for the Budget Calculator application. It manages the integration of the income, spending, and calculation panels, as well as the primary control buttons (Calculate, Undo, and Exit).
 
-Users can input their income from three sources: wages, loans, and savings.
-Each source can be specified with a time duration (per week, per month, or per year), which is normalized to weekly amounts for calculations.
-Spending Management:
+#### saveCurrentState Method
+The saveCurrentState method is responsible for capturing the current state of the user’s input fields (income and spending values). This state is stored using the UndoBase class, allowing the application to revert to this state later if the Undo button is pressed. The method retrieves values from all relevant text fields and stores them in a BudgetState object.
 
-Users can input spending in three categories: food, rent, and transport.
-Similar to income, spending can also be specified with a time duration and is normalized to weekly amounts.
-Calculation of Leftover:
+#### undoLastChange Method
+The undoLastChange method enables the undo functionality by reverting the input fields to the last saved state. It retrieves the last state from the UndoBase stack and updates the corresponding fields in the IncomeBase and SpendingBase panels. If no previous state exists, the method does nothing, ensuring no errors occur.
 
-The leftover amount is calculated as Total Income - Total Spending and displayed to the user.
-If the leftover amount is negative, it is highlighted in red; otherwise, it is displayed in black.
-Undo Functionality:
+#### initListeners Method
+This method initialises the action listeners for the control buttons:
 
-Users can undo changes made to the input fields, reverting to previously saved states.
-Supports multiple undo operations.
-Program Structure
-The program is organized into the following modules:
+1. Calculate: Calls the saveCurrentState method, calculates the total income and spending, and updates the leftover amount in the CalculationBase panel.
+2. Undo: Calls the undoLastChange method to revert to the previous state.
+3. Exit: Terminates the application when pressed.
 
-1. BudgetBase (Main Panel)
-This is the central class that manages the main user interface and integrates all other components.
-Responsibilities:
-Lays out the income, spending, and calculation panels using a GridBagLayout.
-Manages buttons for actions: Calculate, Undo, and Exit.
-Handles saving and undoing the application state via the UndoBase class.
-Key Methods:
-saveCurrentState(UndoBase undoBase): Saves the current state of all input fields.
-undoLastChange(UndoBase undoBase): Reverts to the previous state using UndoBase.
-initListeners(): Adds action listeners for buttons to perform calculations, undo, and exit.
-2. IncomeBase (Income Panel)
-A sub-panel for managing income-related input fields.
-Components:
-Text fields for inputting wages, loans, and savings.
-Dropdowns for selecting the duration of income (per week, per month, or per year).
-A read-only field for displaying the calculated total income.
-Key Methods:
-calculateTotalIncome(): Calculates total income based on the normalized weekly values.
-adjustDuration(double value, String duration): Converts the input value to its weekly equivalent.
-getTextFieldValue(JTextField field): Retrieves and validates numerical values from text fields.
-3. SpendingBase (Spending Panel)
-A sub-panel for managing spending-related input fields.
-Components:
-Text fields for inputting spending on food, rent, and transport.
-Dropdowns for selecting the duration of spending (per week, per month, or per year).
-A read-only field for displaying the calculated total spending.
-Key Methods:
-calculateTotalSpend(): Calculates total spending based on the normalized weekly values.
-adjustDuration(double value, String duration): Converts the input value to its weekly equivalent.
-getTextFieldValue(JTextField field): Retrieves and validates numerical values from text fields.
-4. CalculationBase (Calculation Panel)
-A sub-panel for displaying the leftover amount.
-Components:
-A JLabel that displays the leftover amount, styled dynamically based on whether the value is positive or negative.
-Key Methods:
-updateLeftover(double totalIncome, double totalSpend): Calculates and updates the leftover amount.
-5. UndoBase (Undo Management)
-A utility class that manages the undo functionality using a stack to store BudgetState objects.
-Key Methods:
-saveState(BudgetState state): Pushes the current state onto the stack.
-undo(): Pops the last saved state from the stack.
-canUndo(): Checks if undo operations are available.
-6. BudgetState (State Management)
-A data class that represents the state of all input fields at a specific point in time.
-Attributes:
-wages, loans, savings: Income-related values.
-food, rent, transport: Spending-related values.
-7. BudgetBaseTests (Unit Tests)
-A test suite using JUnit to validate the functionality of the program.
-Test Cases:
-shouldTotal(): Verifies the correctness of total income calculation.
-shouldUndoLastChange(): Ensures undo functionality works as expected.
-shouldUndoMultipleChanges(): Verifies multiple undo operations.
-shouldNotUndoIfNoState(): Ensures the program behaves correctly when no undo states are available.
+## IncomeBase.java File
+### Implementation
+The IncomeBase panel captures and calculates the user’s income details. Users can input income from wages, loans, and savings, selecting durations (Per Week, Per Month, Per Year) for each source.
+
+### calculateTotalIncome Method
+The calculateTotalIncome method computes the total weekly income by:
+
+1. Retrieving values from the input fields.
+2. Converting each value to a weekly equivalent using the adjustDuration method.
+3. Summing the converted values and updating the read-only total income field.
+
+### addListeners Method
+This method adds focus and action listeners to:
+
+1. Recalculate the total income when any field loses focus.
+2. Dynamically update the total income if a duration dropdown is changed.
+
+### Error Handling
+If a non-numeric value is entered, the method displays an error message and ignores the invalid input, preventing disruptions in calculations.
+
+### SpendingBase.java File
+#### Implementation
+The SpendingBase panel captures and calculates the user’s spending details in three categories: food, rent, and transport. Similar to the IncomeBase, users select durations for each category, and values are normalised to weekly amounts.
+
+#### calculateTotalSpend Method
+The calculateTotalSpend method:
+
+1. Retrieves and validates spending values from the input fields.
+2. Converts each value to a weekly equivalent using the adjustDuration method.
+3. Updates the total spending field and returns the calculated value.
+
+#### addListeners Method
+Adds focus and action listeners to ensure that changes in input fields or dropdown selections dynamically update the total spending value.
+
+### CalculationBase.java File
+#### Implementation
+The CalculationBase panel displays the leftover funds (Total Income - Total Spending). The display dynamically changes color to indicate financial health:
+
+Black: Positive or zero leftover.
+Red: Negative leftover.
+
+#### updateLeftover Method
+This method calculates the leftover amount and updates the label with the formatted value, applying the appropriate styling based on whether the result is positive, zero, or negative.
+
+### UndoBase.java File
+#### Implementation
+The UndoBase class manages the undo functionality by maintaining a stack of BudgetState objects. Each BudgetState represents a snapshot of the application’s state at a specific time.
+
+#### saveState Method
+Adds a new BudgetState to the stack, preserving the current values of all input fields.
+
+#### undo Method
+Pops the last saved state from the stack, allowing the application to revert to it. If the stack is empty, the method does nothing.
+
+### BudgetState.java File
+#### Implementation
+The BudgetState class encapsulates the state of the budget at a specific moment. It stores:
+
+- Income values: wages, loans, and savings.
+- Spending values: food, rent, and transport.
+This class is used by UndoBase to manage undo operations.
+
+### BudgetBaseTests.java File
+#### JUnit Testing
+The BudgetBaseTests class includes unit tests to verify the functionality of the Budget Calculator:
+
+1. Income Calculation Test:
+
+     - Verifies that the calculateTotalIncome method correctly computes the sum of income sources normalised to weekly amounts.
+
+2. Spending Calculation Test:
+
+     - Ensures that the calculateTotalSpend method computes spending correctly.
+
+3. Undo Functionality Test:
+
+     - Tests that the undoLastChange method reverts input fields to their previous values.
+
+4. Multiple Undo Test:
+
+     - Verifies that multiple undo operations are correctly handled, restoring the application to progressively earlier states.
+
+5. Edge Case Test:
+
+     - Ensures the application handles empty or invalid inputs gracefully without crashing.
+
+### Future Enhancements
+Add more income and spending categories for detailed budgeting.
+Enable saving and loading of budget data for persistent tracking.
+Introduce visual charts to represent income and spending trends.
