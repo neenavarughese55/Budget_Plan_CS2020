@@ -87,10 +87,10 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
 
         gbc.gridx = 6;
         gbc.gridwidth = 1;
-        exitButton = new JButton("Undo");
+        undoButton = new JButton("Undo");
         gbc.insets = new Insets(10, 5, 10, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(exitButton, gbc);
+        add(undoButton, gbc);
 
         // set up listeners (in a spearate method)
         initListeners();
@@ -119,7 +119,6 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
             spendingBase.foodField.setText(String.valueOf(state.food));
             spendingBase.rentField.setText(String.valueOf(state.rent));
             spendingBase.transportField.setText(String.valueOf(state.transport));
-
         }
     }
 
@@ -127,15 +126,16 @@ public class BudgetBase extends JPanel { // based on Swing JPanel
     // initially just for buttons, can add listeners for text fields
     public void initListeners() {
 
-        // exitButton - exit program when pressed
-        exitButton.addActionListener(e -> System.exit(0));
-
         // calculateButton - call calculateTotalIncome() when pressed
         calculateButton.addActionListener(e -> {
+            saveCurrentState(undoBase);
             double totalIncome = incomeBase.calculateTotalIncome();
             double totalSpending = spendingBase.calculateTotalSpend();
             calculationBase.updateLeftover(totalIncome, totalSpending);
         });
+
+        // exitButton - exit program when pressed
+        exitButton.addActionListener(e -> System.exit(0));
 
         undoButton.addActionListener(e -> undoLastChange(undoBase));
     }
