@@ -25,7 +25,7 @@ import Budget.UI.BudgetState;
 
 // class definition
 public class BudgetBase extends JPanel { // based on Swing JPanel
-    private UndoBase undoBase = new UndoBase();
+    private UndoBase undoBase = new UndoBase(); // Muliple undo
 
     // widgets which may have listeners and/or values
     public JButton calculateButton; // Calculate button
