@@ -19,7 +19,7 @@ public class UndoBase {
         return null; // No state to undo
     }
 
-    // To whether undo is possible
+    // To check whether undo is possible
     public boolean canUndo() {
         return !stateStack.isEmpty();
     }
